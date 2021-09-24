@@ -16,6 +16,7 @@ from __future__ import absolute_import, division, print_function
 import time
 import paddle
 from ppcls.engine.train.utils import update_loss, update_metric, log_info
+from ppcls.utils import profiler
 
 
 def train_epoch(trainer, epoch_id, print_batch_step):
@@ -26,6 +27,7 @@ def train_epoch(trainer, epoch_id, print_batch_step):
     for iter_id, batch in enumerate(train_dataloader):
         if iter_id >= trainer.max_iter:
             break
+        profiler.add_profiler_step(trainer.config["profiler_options"])
         if iter_id == 5:
             for key in trainer.time_info:
                 trainer.time_info[key].reset()
