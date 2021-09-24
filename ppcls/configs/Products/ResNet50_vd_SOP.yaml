@@ -24,9 +24,9 @@ Arch:
   BackboneStopLayer:
     name: flatten_0
   Neck:
-    name: FC
-    embedding_size: 2048
-    class_num: 512
+    name: Linear
+    in_features: 2048
+    out_features: 512
   Head:
     name: ArcMargin  
     embedding_size: 512

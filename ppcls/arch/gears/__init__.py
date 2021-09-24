@@ -12,21 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import paddle.nn as nn
 from .arcmargin import ArcMargin
 from .cosmargin import CosMargin
 from .circlemargin import CircleMargin
-from .fc import FC
-from .vehicle_neck import VehicleNeck
+from paddle.nn import Linear, Conv2D
 
 __all__ = ['build_gear']
 
 
 def build_gear(config):
     support_dict = [
-        'ArcMargin', 'CosMargin', 'CircleMargin', 'FC', 'VehicleNeck'
+        'ArcMargin', 'CosMargin', 'CircleMargin', 'Linear', 'Conv2D'
     ]
     module_name = config.pop('name')
     assert module_name in support_dict, Exception(
         'head only support {}'.format(support_dict))
     module_class = eval(module_name)(**config)
+    if module_name == 'Conv2D':
+        module_class = nn.Sequential(module_class, nn.Flatten())
+    
     return module_class

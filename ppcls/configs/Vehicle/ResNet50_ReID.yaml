@@ -26,9 +26,10 @@ Arch:
   BackboneStopLayer:
     name: "adaptive_avg_pool2d_0"
   Neck:
-    name: "VehicleNeck"
+    name: Conv2D
     in_channels: 2048
     out_channels: 512
+    kernel_size: 1
   Head:
     name: "ArcMargin"  
     embedding_size: 512

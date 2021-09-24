@@ -25,11 +25,10 @@ Arch:
     name: "flatten_0"
     output_dim: 2048
   Head:
-    name: "FC"
-    class_num: 5013
-    embedding_size: 2048
-    # margin: 0.5
-    # scale:  80
+    name: Linear  
+    in_features: 2048
+    out_features: 5013
+
   infer_output_key:  "features"
   infer_add_softmax: "false"
 
