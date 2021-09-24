@@ -22,7 +22,7 @@ from ppcls.utils.misc import AverageMeter
 from ppcls.utils import logger
 
 
-def classification_eval(evaler, epoch_id=0):
+def classification_eval(engine, epoch_id=0):
     output_info = dict()
     time_info = {
         "batch_cost": AverageMeter(
@@ -30,21 +30,19 @@ def classification_eval(evaler, epoch_id=0):
         "reader_cost": AverageMeter(
             "reader_cost", ".5f", postfix=" s,"),
     }
-    print_batch_step = evaler.config["Global"]["print_batch_step"]
+    print_batch_step = engine.config["Global"]["print_batch_step"]
 
     metric_key = None
     tic = time.time()
-    eval_dataloader = evaler.eval_dataloader if evaler.use_dali else evaler.eval_dataloader(
-    )
-    max_iter = len(evaler.eval_dataloader) - 1 if platform.system(
-    ) == "Windows" else len(evaler.eval_dataloader)
-    for iter_id, batch in enumerate(eval_dataloader):
+    max_iter = len(engine.eval_dataloader) - 1 if platform.system(
+    ) == "Windows" else len(engine.eval_dataloader)
+    for iter_id, batch in enumerate(engine.eval_dataloader):
         if iter_id >= max_iter:
             break
         if iter_id == 5:
             for key in time_info:
                 time_info[key].reset()
-        if evaler.use_dali:
+        if engine.use_dali:
             batch = [
                 paddle.to_tensor(batch[0]['data']),
                 paddle.to_tensor(batch[0]['label'])
@@ -54,17 +52,17 @@ def classification_eval(evaler, epoch_id=0):
         batch[0] = paddle.to_tensor(batch[0]).astype("float32")
         batch[1] = batch[1].reshape([-1, 1]).astype("int64")
         # image input
-        out = evaler.model(batch[0])
+        out = engine.model(batch[0])
         # calc loss
-        if evaler.eval_loss_func is not None:
-            loss_dict = evaler.eval_loss_func(out, batch[1])
+        if engine.eval_loss_func is not None:
+            loss_dict = engine.eval_loss_func(out, batch[1])
             for key in loss_dict:
                 if key not in output_info:
                     output_info[key] = AverageMeter(key, '7.5f')
                 output_info[key].update(loss_dict[key].numpy()[0], batch_size)
         # calc metric
-        if evaler.eval_metric_func is not None:
-            metric_dict = evaler.eval_metric_func(out, batch[1])
+        if engine.eval_metric_func is not None:
+            metric_dict = engine.eval_metric_func(out, batch[1])
             if paddle.distributed.get_world_size() > 1:
                 for key in metric_dict:
                     paddle.distributed.all_reduce(
@@ -97,18 +95,18 @@ def classification_eval(evaler, epoch_id=0):
             ])
             logger.info("[Eval][Epoch {}][Iter: {}/{}]{}, {}, {}".format(
                 epoch_id, iter_id,
-                len(evaler.eval_dataloader), metric_msg, time_msg, ips_msg))
+                len(engine.eval_dataloader), metric_msg, time_msg, ips_msg))
 
         tic = time.time()
-    if evaler.use_dali:
-        evaler.eval_dataloader.reset()
+    if engine.use_dali:
+        engine.eval_dataloader.reset()
     metric_msg = ", ".join([
         "{}: {:.5f}".format(key, output_info[key].avg) for key in output_info
     ])
     logger.info("[Eval][Epoch {}][Avg]{}".format(epoch_id, metric_msg))
 
     # do not try to save best eval.model
-    if evaler.eval_metric_func is None:
+    if engine.eval_metric_func is None:
         return -1
     # return 1st metric in the dict
     return output_info[metric_key].avg
