@@ -24,13 +24,13 @@ DeiT（Data-efficient Image Transformers）系列模型是由FaceBook在2020年�
 
 | Models           | Top1 | Top5 | Reference<br>top1 | Reference<br>top5 | FLOPS<br>(G) | Params<br>(M) |
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| DeiT_tiny_patch16_224            | 0.718 | 0.910 | 0.722 | 0.911 |      |      |
-| DeiT_small_patch16_224           | 0.796 | 0.949 | 0.799 | 0.950 |      |      |
-| DeiT_base_patch16_224            | 0.817 | 0.957 | 0.818 | 0.956 |      |      |
-| DeiT_base_patch16_384            | 0.830 | 0.962 | 0.829 | 0.972 |      |      |
-| DeiT_tiny_distilled_patch16_224  | 0.741 | 0.918 | 0.745 | 0.919 |      |      |
-| DeiT_small_distilled_patch16_224 | 0.809 | 0.953 | 0.812 | 0.954 |      |      |
-| DeiT_base_distilled_patch16_224  | 0.831 | 0.964 | 0.834 | 0.965 |      |      |
-| DeiT_base_distilled_patch16_384  | 0.851 | 0.973 | 0.852 | 0.972 |      |      |
+| DeiT_tiny_patch16_224            | 0.721 | 0.911 | 0.722 | 0.911 |      |      |
+| DeiT_small_patch16_224           | 0.798 | 0.950 | 0.799 | 0.950 |      |      |
+| DeiT_base_patch16_224            | 0.818 | 0.956 | 0.818 | 0.956 |      |      |
+| DeiT_base_patch16_384            | 0.829 | 0.962 | 0.829 | 0.972 |      |      |
+| DeiT_tiny_distilled_patch16_224  | 0.745 | 0.919 | 0.745 | 0.919 |      |      |
+| DeiT_small_distilled_patch16_224 | 0.812 | 0.954 | 0.812 | 0.954 |      |      |
+| DeiT_base_distilled_patch16_224  | 0.833 | 0.965 | 0.834 | 0.965 |      |      |
+| DeiT_base_distilled_patch16_384  | 0.852 | 0.972 | 0.852 | 0.972 |      |      |
 
 关于Params、FLOPs、Inference speed等信息，敬请期待。
