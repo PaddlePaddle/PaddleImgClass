@@ -62,7 +62,8 @@ class Trainer(object):
         print_config(config)
         # set device
         assert self.config["Global"]["device"] in ["cpu", "gpu", "xpu"]
-        self.device = paddle.set_device(self.config["Global"]["device"])
+        # self.device = paddle.set_device(self.config["Global"]["device"])
+        self.device = paddle.set_device('gpu:2')
         # set dist
         self.config["Global"][
             "distributed"] = paddle.distributed.get_world_size() != 1
@@ -207,8 +208,15 @@ class Trainer(object):
                     with paddle.amp.auto_cast(custom_black_list={
                             "flatten_contiguous_range", "greater_than"
                     }):
+                        
                         out = self.forward(batch)
+                        out = out.astype('float32')
+                        # with open('/workspace/PaddleClas/op_no_gray.txt', 'w+t') as f:
+                        #     print(self.model.forward.program_cache.last()[-1][1].program, file=f)
+                        # import pdb; pdb.set_trace()
+                        # self.model.forward.program_cache.last()[-1][1].program
                         loss_dict = self.train_loss_func(out, batch[1])
+                        
                 else:
                     out = self.forward(batch)
 
