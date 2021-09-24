@@ -1,6 +1,6 @@
 #!/bin/bash
 FILENAME=$1
-# MODE be one of ['lite_train_infer' 'whole_infer' 'whole_train_infer', 'infer']
+# MODE be one of ['lite_train_infer' 'whole_infer' 'whole_train_infer', 'infer', "cpp_infer", "serving_infer"]
 MODE=$2
 
 dataline=$(cat ${FILENAME})
@@ -57,6 +57,18 @@ elif [ ${MODE} = "whole_train_infer" ];then
     mv train.txt train_list.txt
     mv val.txt val_list.txt
     cd ../../
+fi
+
+if [ ${MODE} = "serving_infer" ];then
+    # prepare serving env
+    python_name=$(func_parser_value "${lines[2]}")
+    ${python_name} -m pip install install paddle-serving-server-gpu==0.6.1.post101
+    ${python_name} -m pip install paddle_serving_client==0.6.1
+    ${python_name} -m pip install paddle-serving-app==0.6.1
+    unset http_proxy
+    unset https_proxy
+    cd ./deploy/paddleserving
+    wget -nc https://paddle-imagenet-models-name.bj.bcebos.com/dygraph/inference/ResNet50_vd_infer.tar && tar xf ResNet50_vd_infer.tar
 fi
 
 if [ ${MODE} = "cpp_infer" ];then

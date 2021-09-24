@@ -56,3 +56,22 @@ cpu_threads:1|6
 use_mkldnn:0|1
 use_tensorrt:0|1
 use_fp16:0|1
+null:null
+null:null
+===========================serving_infer_params=======================
+trans_model:-m paddle_serving_client.convert
+--dirname:ResNet50_vd_infer/
+--model_filename:inference.pdmodel
+--params_filename:inference.pdiparams
+--serving_server:ResNet50_vd_serving/
+--serving_client:ResNet50_vd_client/
+serving_dir:./deploy/paddleserving
+web_service:classification_web_service.py --config=config.yml --opt op.imagenet.concurrency=1
+op.imagenet.local_service_conf.devices:null|0
+op.imagenet.local_service_conf.use_mkldnn:True|False
+op.imagenet.local_service_conf.thread_num:1|6
+op.imagenet.local_service_conf.use_trt:False|True
+op.imagenet.local_service_conf.precision:fp32|fp16|int8
+pipline:pipeline_http_client.py
+null:null
+null:null
